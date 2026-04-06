@@ -79,15 +79,16 @@ body {
 .btn-lg { padding: 15px 32px; font-size: 1rem; }
 .btn-full { width: 100%; justify-content: center; }
 
-/* ── NAV ───────────────────────────────────────────────── */
-.nav {
+/* ── SITE HEADER (not `.nav` — Bootstrap’s .nav sets padding-left:0 and loads after this file) */
+.ace-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px;
+  /* Match hero / section inset so the logo isn’t tighter than page content */
+  padding: 0 clamp(24px, 5vw, 80px);
   height: 64px;
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(12px);
@@ -106,14 +107,60 @@ body {
   display: flex;
   gap: 32px;
 }
-.nav-links a {
+.nav-links a,
+.nav-scroll-link {
   text-decoration: none;
   color: var(--ink-soft);
   font-size: 0.875rem;
   font-weight: 400;
   transition: color 0.15s;
 }
-.nav-links a:hover { color: var(--blue); }
+.nav-scroll-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+.nav-links a:hover,
+.nav-scroll-link:hover { color: var(--blue); }
+
+.nav-logo-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.nav-user {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-user-role {
+  color: var(--ink-muted);
+  text-transform: capitalize;
+}
+
+.btn-nav-secondary {
+  padding: 9px 14px;
+  font-size: 0.8rem;
+}
+a.btn-nav-secondary {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* ── HERO ───────────────────────────────────────────────── */
 .hero {
@@ -576,11 +623,185 @@ body {
 }
 
 @media (max-width: 768px) {
-  .nav { padding: 0 20px; }
+  .ace-nav { padding: 0 max(24px, env(safe-area-inset-left, 0px)) 0 max(24px, env(safe-area-inset-right, 0px)); }
   .nav-links { display: none; }
+  .nav-user { display: none; }
   .hero { padding: 100px 24px 60px; }
   .section { padding: 64px 24px; }
   .track-grid, .service-grid, .mentor-grid { grid-template-columns: 1fr; }
   .footer { padding: 24px; flex-direction: column; align-items: flex-start; }
   .cta-banner { padding: 64px 24px; }
+}
+
+/* ── LOGIN PAGE ─────────────────────────────────────────── */
+.login-page {
+  min-height: 100vh;
+  /* Clear fixed .ace-nav (64px) so content isn’t under the bar */
+  padding-top: 64px;
+  background: linear-gradient(180deg, var(--blue-mist) 0%, var(--white) 45%);
+}
+
+.login-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px 80px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  box-shadow: 0 16px 48px rgba(0, 62, 146, 0.08);
+}
+
+.login-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.login-lead {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.login-role-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-role-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 14px 22px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.login-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.login-input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.login-input:focus {
+  outline: none;
+  border-color: var(--blue-mid);
+  box-shadow: 0 0 0 3px rgba(21, 87, 192, 0.2);
+}
+
+.login-input-password {
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.12em;
+}
+
+.login-hint {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+.login-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* ── BROWSE / MENTOR APP SHELL ──────────────────────────── */
+.browse-page,
+.mentor-dash-page {
+  min-height: 100vh;
+  padding-top: 64px;
+  background: var(--white);
+}
+
+.browse-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px clamp(24px, 5vw, 80px) 80px;
+}
+
+.browse-header {
+  margin-bottom: 28px;
+}
+
+.browse-title {
+  margin-bottom: 10px;
+}
+
+.browse-sub {
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  max-width: 520px;
+}
+
+.browse-card-note {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  text-align: center;
+  margin: 4px 0 0;
+}
+
+.app-shell-nav-actions {
+  margin-left: auto;
+}
+
+.mentor-placeholder-card {
+  margin-top: 28px;
+  max-width: 440px;
+  padding: 24px 26px;
+  background: var(--blue-mist);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.mentor-placeholder-lead {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.mentor-placeholder-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
 }

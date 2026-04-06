@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import AppShellNav from '../../components/layout/AppShellNav.jsx'
 import { mockMentors } from '../../lib/mockData.js'
 
+// utility functions
 function trackClass(track) {
   const t = track.toLowerCase()
   if (t.includes('banking')) return 'ib'
@@ -20,28 +21,62 @@ function trackTagLabel(track) {
   return track.slice(0, 3)
 }
 
+// modal component
+function ScheduleModal({ mentor, open, onClose, onConfirm }) {
+  const [sessionType, setSessionType] = useState('coaching')
+  const [sessionTime, setSessionTime] = useState('')
+
+  if (!open || !mentor) return null
+
+  const handleConfirm = () => {
+    if (!sessionType || !sessionTime) {
+      alert('Please select both session type and time.')
+      return
+    }
+    onConfirm({ sessionType, sessionTime })
+    setSessionType('coaching')
+    setSessionTime('')
+  }
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>×</button>
+        <h3>Schedule Session with {mentor.name}</h3>
+        <label>
+          Session Type:
+          <select value={sessionType} onChange={(e) => setSessionType(e.target.value)}>
+            {mentor.sessionTypes.map((type) => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Time:
+          <input type="datetime-local" value={sessionTime} onChange={(e) => setSessionTime(e.target.value)} />
+        </label>
+        <div className="modal-actions">
+          <button className="btn btn-outline" onClick={onClose}>Cancel</button>
+          <button
+            className="btn btn-primary"
+            onClick={handleConfirm}
+            disabled={!sessionType || !sessionTime}
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function BrowsePage() {
   const [mentors, setMentors] = useState([])
   const [filters, setFilters] = useState({ track: [], firm: [] })
   const [modal, setModal] = useState({ open: false, mentor: null })
-  const [sessionType, setSessionType] = useState('coaching')
-  const [sessionTime, setSessionTime] = useState('')
-  const [openFilter, setOpenFilter] = useState(null) // 'track' | 'firm' | null
-
-  const dropdownRef = useRef(null)
+  const [openFilter, setOpenFilter] = useState(null)
 
   useEffect(() => setMentors(mockMentors), [])
-
-  // Close dropdown if click outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenFilter(null)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
 
   const tracks = Array.from(new Set(mockMentors.map((m) => m.track)))
   const firms = Array.from(new Set(mockMentors.map((m) => m.firm)))
@@ -62,15 +97,10 @@ export default function BrowsePage() {
     })
   }
 
-  const openModal = (mentor) => {
-    setModal({ open: true, mentor })
-    setSessionType('coaching')
-    setSessionTime('')
-  }
-
+  const openModal = (mentor) => setModal({ open: true, mentor })
   const closeModal = () => setModal({ open: false, mentor: null })
 
-  const confirmSession = () => {
+  const confirmSession = ({ sessionType, sessionTime }) => {
     alert(`Scheduled ${sessionType} with ${modal.mentor.name} at ${sessionTime}`)
     closeModal()
   }
@@ -84,7 +114,8 @@ export default function BrowsePage() {
           <p className="browse-sub">Book sessions with insiders at your target firms.</p>
         </div>
 
-        <div className="mentor-filters" ref={dropdownRef}>
+        {/* Filters */}
+        <div className="mentor-filters">
           <div className="filter-container">
             <button className="btn btn-outline" onClick={() => setOpenFilter(openFilter === 'track' ? null : 'track')}>
               Select Tracks
@@ -92,12 +123,12 @@ export default function BrowsePage() {
             {openFilter === 'track' && (
               <div className="filter-dropdown">
                 {tracks.map((t) => (
-                  <label key={t} className="filter-option">
+                  <label className="filter-option" key={t}>
                     <input
                       type="checkbox"
                       checked={filters.track.includes(t)}
                       onChange={() => handleFilterChange('track', t)}
-                    />{' '}
+                    />
                     {t}
                   </label>
                 ))}
@@ -112,12 +143,12 @@ export default function BrowsePage() {
             {openFilter === 'firm' && (
               <div className="filter-dropdown">
                 {firms.map((f) => (
-                  <label key={f} className="filter-option">
+                  <label className="filter-option" key={f}>
                     <input
                       type="checkbox"
                       checked={filters.firm.includes(f)}
                       onChange={() => handleFilterChange('firm', f)}
-                    />{' '}
+                    />
                     {f}
                   </label>
                 ))}
@@ -126,6 +157,7 @@ export default function BrowsePage() {
           </div>
         </div>
 
+        {/* Mentor cards */}
         <div className="mentor-grid">
           {filteredMentors.map((m) => (
             <article className="mentor-card" key={m.id}>
@@ -152,29 +184,13 @@ export default function BrowsePage() {
           ))}
         </div>
 
-        {modal.open && (
-          <div className="modal-backdrop" onClick={closeModal}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <h3>Schedule Session with {modal.mentor.name}</h3>
-              <label>
-                Session Type:
-                <select value={sessionType} onChange={(e) => setSessionType(e.target.value)}>
-                  {modal.mentor.sessionTypes.map((type) => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Time:
-                <input type="datetime-local" value={sessionTime} onChange={(e) => setSessionTime(e.target.value)} />
-              </label>
-              <div className="modal-actions">
-                <button className="btn btn-outline" onClick={closeModal}>Cancel</button>
-                <button className="btn btn-primary" onClick={confirmSession}>Confirm</button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Schedule Modal */}
+        <ScheduleModal
+          mentor={modal.mentor}
+          open={modal.open}
+          onClose={closeModal}
+          onConfirm={confirmSession}
+        />
       </main>
     </div>
   )

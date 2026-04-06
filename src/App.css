@@ -998,7 +998,6 @@ a.btn-nav-secondary {
   overflow-y: auto; /* scroll if content exceeds max-height */
 }
 
-
 /* browse page */
 .browse-sub {
   text-align: center;
@@ -1009,54 +1008,40 @@ a.btn-nav-secondary {
   margin: 0 auto 24px;
 }
 
-/* Filters */
 .mentor-filters {
   display: flex;
-  gap: 24px;
-  justify-content: center; /* centered buttons */
+  gap: 16px;
   margin-bottom: 24px;
-  position: relative;
+  justify-content: center;
 }
 
 .filter-container {
   position: relative;
 }
 
-.filter-container button {
-  min-width: 140px;
-}
-
 .filter-dropdown {
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 36px;
+  left: 0;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 16px;
+  padding: 12px;
   min-width: 220px;
-  box-shadow: 0 8px 20px rgba(0,62,146,0.12);
   z-index: 10;
-  flex-direction: column; /* stack items vertically */
-  align-items: flex-start; /* align labels to the left */
+  text-align: left;
 }
 
 .filter-option {
   display: flex;
   align-items: center;
-  gap: 10px;      /* space between checkbox and text */
+  gap: 10px;
   margin-bottom: 10px;
   font-size: 0.95rem;
-  justify-content: flex-start; /* ensure left alignment */
-  text-align: left;            /* for multi-line options */
+  width: 100%;
 }
 
-.filter-option:last-child {
-  margin-bottom: 0;
-}
-
-/* Mentor grid and cards */
+/* mentor grid and cards */
 .mentor-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -1071,33 +1056,17 @@ a.btn-nav-secondary {
   border-radius: 12px;
   padding: 16px;
   box-shadow: var(--shadow);
-  min-height: 300px; /* anchors schedule button at bottom */
+  min-height: 300px; /* anchors schedule button */
 }
 
 .mentor-card-top {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .mentor-header {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.mentor-avatar {
-  width: 48px;
-  height: 48px;
-  background: var(--primary-light);
-  color: var(--white);
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 .mentor-info {
@@ -1118,28 +1087,13 @@ a.btn-nav-secondary {
   display: flex;
   justify-content: space-between;
   margin-top: 12px;
-  font-size: 0.9rem;
 }
 
 .schedule-btn {
-  margin-top: auto; /* anchors button to bottom */
+  margin-top: 12px;
 }
 
-/* Track tags */
-.mentor-track-tag {
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.track-ib { background-color: #e0f0ff; color: #007bff; }
-.track-consulting { background-color: #f0e0ff; color: #6f42c1; }
-.track-tech { background-color: #e0ffe0; color: #28a745; }
-.track-pe { background-color: #fff0e0; color: #fd7e14; }
-
-/* Modal */
+/* modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1154,14 +1108,17 @@ a.btn-nav-secondary {
   background: var(--white);
   padding: 24px;
   border-radius: 12px;
-  width: 360px;
-  max-width: 90%;
-  box-shadow: 0 8px 20px rgba(0,62,146,0.12);
+  width: 300px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .modal-content label {
-  display: block;
-  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
 }
 
 .modal-actions {
@@ -1169,4 +1126,28 @@ a.btn-nav-secondary {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 16px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal-content select,
+.modal-content input[type="datetime-local"] {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.modal-content .btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

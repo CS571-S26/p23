@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext.jsx'
 import LandingPage from './features/landing/LandingPage.jsx'
 import LoginPage from './features/auth/LoginPage.jsx'
 import BrowsePage from './features/mentors/BrowsePage.jsx'
+import ScheduleSession from './features/mentors/ScheduleSession.jsx'
 import MentorDashboard from './features/mentor/MentorDashboard.jsx'
 import './App.css'
 
@@ -34,6 +35,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<GuestLandingRoute />} />
           <Route path="/login" element={<LoginPage />} />
+          
+          {/* Student routes */}
           <Route
             path="/browse"
             element={
@@ -42,6 +45,16 @@ export default function App() {
               </RequireStudent>
             }
           />
+          <Route
+            path="/schedule-session"
+            element={
+              <RequireStudent>
+                <ScheduleSession />
+              </RequireStudent>
+            }
+          />
+
+          {/* Mentor routes */}
           <Route
             path="/mentor-dash"
             element={

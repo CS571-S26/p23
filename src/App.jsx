@@ -4,6 +4,7 @@ import LandingPage from './features/landing/LandingPage.jsx'
 import LoginPage from './features/auth/LoginPage.jsx'
 import BrowsePage from './features/mentors/BrowsePage.jsx'
 import ScheduleSession from './features/mentors/ScheduleSession.jsx'
+import StudentSessions from './features/mentors/StudentSessions.jsx'
 import MentorDashboard from './features/mentor/MentorDashboard.jsx'
 import './App.css'
 
@@ -35,7 +36,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<GuestLandingRoute />} />
           <Route path="/login" element={<LoginPage />} />
-          
+
           {/* Student routes */}
           <Route
             path="/browse"
@@ -50,6 +51,14 @@ export default function App() {
             element={
               <RequireStudent>
                 <ScheduleSession />
+              </RequireStudent>
+            }
+          />
+          <Route
+            path="/my-sessions"
+            element={
+              <RequireStudent>
+                <StudentSessions />
               </RequireStudent>
             }
           />

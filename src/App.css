@@ -1151,3 +1151,151 @@ a.btn-nav-secondary {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ADD THESE RULES TO THE BOTTOM OF App.css
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── My Sessions page ─────────────────────────────────────────────────── */
+.sessions-section {
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.sessions-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-h);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sessions-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 1px 8px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+.sessions-none-sub {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.inline-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Session rows (student variant) ──────────────────────────────────── */
+.session-row-student {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.session-row-student:last-child { border-bottom: none; }
+
+.session-row-past {
+  opacity: 0.65;
+}
+
+.session-row-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.mentor-avatar-sm {
+  width: 40px;
+  height: 40px;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.session-type-badge {
+  display: inline-block;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 1px 7px;
+}
+
+.session-status-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.session-status-past {
+  background: var(--code-bg);
+  color: var(--text);
+}
+
+.btn-cancel {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: #dc2626;
+  border-color: transparent;
+  padding: 6px 14px;
+}
+.btn-cancel:hover {
+  background: rgba(220,38,38,0.07);
+  border-color: rgba(220,38,38,0.25);
+}
+
+/* ── Empty state ──────────────────────────────────────────────────────── */
+.sessions-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 72px 24px;
+  text-align: center;
+}
+.sessions-empty-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+.sessions-empty-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+.sessions-empty-sub {
+  color: var(--text);
+  max-width: 340px;
+  margin: 0 0 8px;
+}

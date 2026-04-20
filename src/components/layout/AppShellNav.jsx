@@ -10,6 +10,19 @@ export default function AppShellNav() {
       <Link to={home} className="nav-logo nav-logo-link">
         ACE
       </Link>
+
+      {/* Student-only nav links */}
+      {user?.role === 'student' && (
+        <div className="nav-links">
+          <Link to="/browse" className="nav-scroll-link">
+            Browse
+          </Link>
+          <Link to="/my-sessions" className="nav-scroll-link">
+            My Sessions
+          </Link>
+        </div>
+      )}
+
       <div className="nav-actions app-shell-nav-actions">
         {user && (
           <>
@@ -17,7 +30,11 @@ export default function AppShellNav() {
               {user.username}
               <span className="nav-user-role"> · {user.role}</span>
             </span>
-            <button type="button" className="btn btn-ghost btn-nav-secondary" onClick={logout}>
+            <button
+              type="button"
+              className="btn btn-ghost btn-nav-secondary"
+              onClick={logout}
+            >
               Log out
             </button>
           </>

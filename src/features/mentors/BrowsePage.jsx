@@ -1,142 +1,210 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import AppShellNav from '../../components/layout/AppShellNav.jsx'
 import { mockMentors } from '../../lib/mockData.js'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Badge from 'react-bootstrap/Badge'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
+import Stack from 'react-bootstrap/Stack'
 
-function trackClass(track) {
-  const t = track.toLowerCase()
-  if (t.includes('banking')) return 'ib'
-  if (t.includes('consulting')) return 'consulting'
-  if (t.includes('tech')) return 'tech'
-  if (t.includes('equity') || t.includes('pe')) return 'pe'
-  return 'ib'
+const TRACK_VARIANTS = {
+  'Investment Banking': 'warning',
+  'Management Consulting': 'success',
+  'Tech & FAANG': 'info',
+  'Private Equity': 'danger',
 }
 
-function trackTagLabel(track) {
-  const t = track.toLowerCase()
-  if (t.includes('banking')) return 'IB'
-  if (t.includes('consulting')) return 'Consulting'
-  if (t.includes('tech')) return 'Tech'
-  if (t.includes('equity') || t.includes('pe')) return 'PE'
-  return track.slice(0, 3)
+const SESSION_LABELS = {
+  coaching: 'Strategy Call',
+  mock_interview: 'Mock Interview',
+  resume_review: 'App Review',
+}
+
+function getInitials(name) {
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
 }
 
 export default function BrowsePage() {
   const [mentors, setMentors] = useState([])
-  const [filters, setFilters] = useState({ track: [], firm: [] })
-  const [openFilter, setOpenFilter] = useState(null)
-  const navigate = useNavigate()
+  const [search, setSearch] = useState('')
+  const [filterTrack, setFilterTrack] = useState('All')
 
-  useEffect(() => setMentors(mockMentors), [])
+  useEffect(() => {
+    setMentors(mockMentors)
+  }, [])
 
-  const tracks = Array.from(new Set(mockMentors.map((m) => m.track)))
-  const firms = Array.from(new Set(mockMentors.map((m) => m.firm)))
+  const tracks = ['All', ...new Set(mockMentors.map((m) => m.track))]
 
-  const filteredMentors = mentors.filter((m) => {
-    const trackMatch = filters.track.length === 0 || filters.track.includes(m.track)
-    const firmMatch = filters.firm.length === 0 || filters.firm.includes(m.firm)
-    return trackMatch && firmMatch
+  const filtered = mentors.filter((m) => {
+    const matchSearch =
+      m.name.toLowerCase().includes(search.toLowerCase()) ||
+      m.firm.toLowerCase().includes(search.toLowerCase()) ||
+      m.role.toLowerCase().includes(search.toLowerCase())
+    const matchTrack = filterTrack === 'All' || m.track === filterTrack
+    return matchSearch && matchTrack
   })
 
-  const handleFilterChange = (type, value) => {
-    setFilters((prev) => {
-      const values = prev[type]
-      const newValues = values.includes(value)
-        ? values.filter((v) => v !== value)
-        : [...values, value]
-      return { ...prev, [type]: newValues }
-    })
-  }
-
-  const goToSchedule = (mentor) => {
-    navigate('/schedule-session', { state: { mentor } })
-  }
-
   return (
-    <div className="ace-root browse-page">
+    <div className="min-vh-100 bg-light">
       <AppShellNav />
-      <main className="browse-main">
-        <div className="browse-header">
-          <h1 className="section-title browse-title">Browse mentors</h1>
-          <p className="browse-sub">Book sessions with insiders at your target firms.</p>
-        </div>
 
-        {/* Filters */}
-        <div className="mentor-filters">
-          <div className="filter-container">
-            <button
-              className="btn btn-outline"
-              onClick={() => setOpenFilter(openFilter === 'track' ? null : 'track')}
+      <Container fluid="xl" className="py-5">
+
+        {/* Header */}
+        <Row className="mb-4 align-items-end">
+          <Col xs={12} md={7}>
+            <h1 className="fw-bold mb-1" style={{ letterSpacing: '-0.5px' }}>
+              Browse Mentors
+            </h1>
+            <p className="text-muted mb-0">
+              Book 1:1 sessions with insiders at your target firms.
+            </p>
+          </Col>
+          <Col xs={12} md={5} className="mt-3 mt-md-0">
+            <InputGroup>
+              <InputGroup.Text className="bg-white border-end-0">🔍</InputGroup.Text>
+              <Form.Control
+                className="border-start-0 bg-white"
+                placeholder="Search by name, firm, or role…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </InputGroup>
+          </Col>
+        </Row>
+
+        {/* Track filter pills */}
+        <Stack direction="horizontal" gap={2} className="flex-wrap mb-4">
+          {tracks.map((t) => (
+            <Button
+              key={t}
+              size="sm"
+              variant={filterTrack === t ? 'dark' : 'outline-secondary'}
+              className="rounded-pill px-3"
+              onClick={() => setFilterTrack(t)}
             >
-              Select Tracks
-            </button>
-            {openFilter === 'track' && (
-              <div className="filter-dropdown">
-                {tracks.map((t) => (
-                  <label className="filter-option" key={t}>
-                    <input
-                      type="checkbox"
-                      checked={filters.track.includes(t)}
-                      onChange={() => handleFilterChange('track', t)}
-                    />
-                    {t}
-                  </label>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="filter-container">
-            <button
-              className="btn btn-outline"
-              onClick={() => setOpenFilter(openFilter === 'firm' ? null : 'firm')}
-            >
-              Select Companies
-            </button>
-            {openFilter === 'firm' && (
-              <div className="filter-dropdown">
-                {firms.map((f) => (
-                  <label className="filter-option" key={f}>
-                    <input
-                      type="checkbox"
-                      checked={filters.firm.includes(f)}
-                      onChange={() => handleFilterChange('firm', f)}
-                    />
-                    {f}
-                  </label>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Mentor cards */}
-        <div className="mentor-grid">
-          {filteredMentors.map((m) => (
-            <article className="mentor-card" key={m.id}>
-              <div className="mentor-card-top">
-                <div className="mentor-header">
-                  <div className="mentor-avatar">{m.name.split(' ').map((n) => n[0]).join('')}</div>
-                  <div className="mentor-info">
-                    <div className="mentor-name">{m.name}</div>
-                    <div className="mentor-role">{m.role} · {m.firm}</div>
-                  </div>
-                  <div className={`mentor-track-tag track-${trackClass(m.track)}`}>{trackTagLabel(m.track)}</div>
-                </div>
-                <p className="mentor-specialty" title={m.bio}>{m.bio}</p>
-                <div className="mentor-meta">
-                  <span>⭐ {m.rating.toFixed(1)}</span>
-                  <span>{m.totalSessions} sessions</span>
-                  <span className="mentor-price">${m.pricePerSession}</span>
-                </div>
-              </div>
-              <button className="btn btn-primary schedule-btn" onClick={() => goToSchedule(m)}>
-                Schedule Session
-              </button>
-            </article>
+              {t}
+            </Button>
           ))}
-        </div>
-      </main>
+        </Stack>
+
+        {/* Results count */}
+        <p className="text-muted small mb-3">
+          Showing <strong>{filtered.length}</strong> mentor{filtered.length !== 1 ? 's' : ''}
+        </p>
+
+        {/* Mentor grid */}
+        <Row className="g-4">
+          {filtered.map((m) => (
+            <Col key={m.id} xs={12} sm={6} lg={4} xl={3}>
+              <Card className="h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+
+                {/* Card top accent */}
+                <div
+                  style={{
+                    height: 6,
+                    background:
+                      m.track === 'Investment Banking'
+                        ? '#ffc107'
+                        : m.track === 'Management Consulting'
+                        ? '#198754'
+                        : m.track === 'Tech & FAANG'
+                        ? '#0dcaf0'
+                        : '#dc3545',
+                  }}
+                />
+
+                <Card.Body className="p-4 d-flex flex-column">
+
+                  {/* Avatar + name */}
+                  <div className="d-flex align-items-center gap-3 mb-3">
+                    <div
+                      className="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
+                      style={{
+                        width: 48,
+                        height: 48,
+                        fontSize: 16,
+                        background: '#1a1a2e',
+                      }}
+                    >
+                      {getInitials(m.name)}
+                    </div>
+                    <div className="overflow-hidden">
+                      <div className="fw-semibold text-truncate">{m.name}</div>
+                      <div className="text-muted small text-truncate">
+                        {m.role} · {m.firm}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Track badge */}
+                  <div className="mb-2">
+                    <Badge bg={TRACK_VARIANTS[m.track] || 'secondary'} className="rounded-pill">
+                      {m.track}
+                    </Badge>
+                  </div>
+
+                  {/* Bio */}
+                  <p className="text-muted small flex-grow-1 mb-3">{m.bio}</p>
+
+                  {/* Session type badges */}
+                  <Stack direction="horizontal" gap={1} className="flex-wrap mb-3">
+                    {m.sessionTypes.map((s) => (
+                      <Badge key={s} bg="light" text="dark" className="border fw-normal small">
+                        {SESSION_LABELS[s] || s}
+                      </Badge>
+                    ))}
+                  </Stack>
+
+                  {/* Stats row */}
+                  <Row className="g-0 text-center mb-3 border rounded-3 overflow-hidden">
+                    <Col className="py-2 border-end">
+                      <div className="fw-bold small">⭐ {m.rating}</div>
+                      <div className="text-muted" style={{ fontSize: 11 }}>Rating</div>
+                    </Col>
+                    <Col className="py-2 border-end">
+                      <div className="fw-bold small">{m.totalSessions}</div>
+                      <div className="text-muted" style={{ fontSize: 11 }}>Sessions</div>
+                    </Col>
+                    <Col className="py-2">
+                      <div className="fw-bold small">${m.pricePerSession}</div>
+                      <div className="text-muted" style={{ fontSize: 11 }}>/ session</div>
+                    </Col>
+                  </Row>
+
+                  {/* CTA */}
+                  <Button
+                    variant="dark"
+                    className="w-100 rounded-3"
+                    disabled
+                  >
+                    Book Session — Coming Soon
+                  </Button>
+
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-5 text-muted">
+            <div className="fs-1 mb-2">🔍</div>
+            <p>No mentors match your search.</p>
+            <Button variant="outline-secondary" size="sm" onClick={() => { setSearch(''); setFilterTrack('All') }}>
+              Clear filters
+            </Button>
+          </div>
+        )}
+
+      </Container>
     </div>
   )
 }

@@ -83,7 +83,7 @@ function SessionRow({ session }) {
       </td>
       <td>
         <span style={{ fontSize: '0.83rem' }}>
-          {typeIcon} {typeLabel}
+          <span aria-hidden="true">{typeIcon}</span> {typeLabel}
         </span>
       </td>
       <td className="text-muted" style={{ fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
@@ -102,7 +102,7 @@ function SessionRow({ session }) {
             className="rounded-pill fw-normal"
             style={{ background: '#e8f5e9', color: '#1b5e20', fontSize: '0.72rem' }}
           >
-            ● Upcoming
+            <span aria-hidden="true">●</span> Upcoming
           </Badge>
         )}
       </td>
@@ -240,7 +240,7 @@ export default function SessionsTab({ sessions }) {
       {/* Sessions table */}
       <Card className="border-0 shadow-sm rounded-4">
         <Card.Header className="bg-white border-0 pt-4 px-4 pb-0">
-          <h6 className="fw-semibold mb-0" style={{ color: '#0a0f1e' }}>
+          <h2 className="fw-semibold mb-0" style={{ color: '#0a0f1e' }}>
             Session History
             {filtered.length > 0 && (
               <Badge
@@ -250,7 +250,7 @@ export default function SessionsTab({ sessions }) {
                 {filtered.length}
               </Badge>
             )}
-          </h6>
+          </h2>
         </Card.Header>
         <Card.Body className="p-0">
           {filtered.length === 0 ? (
@@ -296,7 +296,7 @@ export default function SessionsTab({ sessions }) {
                         </Badge>
                       ) : (
                         <Badge className="rounded-pill fw-normal" style={{ background: '#e8f5e9', color: '#1b5e20', fontSize: '0.72rem' }}>
-                          ● Upcoming
+                          <span aria-hidden="true">●</span> Upcoming
                         </Badge>
                       )}
                     </td>

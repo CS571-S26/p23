@@ -23,7 +23,7 @@ export default function AppShellNav() {
           ACE
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="app-nav" />
+        <Navbar.Toggle aria-controls="app-nav" aria-label="Toggle navigation" />
 
         <Navbar.Collapse id="app-nav">
           <Nav className="ms-auto align-items-center gap-2">
@@ -34,6 +34,7 @@ export default function AppShellNav() {
                     variant="outline-primary"
                     size="sm"
                     onClick={() => navigate('/my-sessions')}
+                    aria-label="View my booked sessions"
                   >
                     My Sessions
                   </Button>
@@ -53,6 +54,7 @@ export default function AppShellNav() {
                   variant="outline-secondary"
                   size="sm"
                   onClick={handleLogout}
+                  aria-label="Log out"
                 >
                   Log out
                 </Button>

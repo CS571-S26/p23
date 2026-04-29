@@ -88,7 +88,7 @@ export default function AvailabilityTab({ mentorId, availability, sessionTypes, 
     setSaved(false)
   }
 
-  const hasErrors = Object.values(priceErrors).some(Boolean)
+  const hasErrors = Object.values(priceErrors).some(Boolean) || activeTypes.length === 0
   const enabledDays = DAYS.filter((d) => avail[d.key]?.enabled)
 
   const handleSave = () => {
@@ -216,7 +216,7 @@ export default function AvailabilityTab({ mentorId, availability, sessionTypes, 
         <Col xs={12} lg={5}>
           <Card className="border-0 shadow-sm rounded-4">
             <Card.Header className="bg-white border-0 pt-4 px-4 pb-2">
-              <h2 className="fw-semibold mb-0 fs-6" style={{ color: '#0a0f1e' }}>Session Types & Pricing</h2>
+              <h2 className="fw-semibold mb-0 fs-6" style={{ color: '#0a0f1e' }}>Session Types and Pricing</h2>
               <p className="text-muted mb-0 mt-1" style={{ fontSize: '0.78rem' }}>
                 Enable session types and set your rate for each.
               </p>
@@ -237,7 +237,7 @@ export default function AvailabilityTab({ mentorId, availability, sessionTypes, 
                     >
                       {/* Header row */}
                       <div className="d-flex align-items-center gap-2 mb-2">
-                        <span style={{ fontSize: '1.2rem' }}>{SESSION_TYPE_ICONS[type]}</span>
+                        <span style={{ fontSize: '1.2rem' }}><span aria-hidden="true">{SESSION_TYPE_ICONS[type]}</span></span>
                         <div className="flex-grow-1">
                           <div className="fw-semibold" style={{ fontSize: '0.88rem', color: isActive ? '#003E92' : '#aaa' }}>
                             {SESSION_TYPE_LABELS[type]}

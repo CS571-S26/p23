@@ -96,7 +96,7 @@ export default function BrowsePage() {
           bg="dark"
         >
           <Toast.Body className="text-white d-flex align-items-center gap-2">
-            <span>✅</span>
+            <span aria-hidden="true">✅</span>
             <span>
               <strong>{SESSION_LABELS[toast.type] || toast.type}</strong> booked with {toast.mentorName}!
             </span>
@@ -117,9 +117,12 @@ export default function BrowsePage() {
             </p>
           </Col>
           <Col xs={12} md={5} className="mt-3 mt-md-0">
+            <Form.Label htmlFor="mentor-search" className="visually-hidden">Search mentors by name, firm, or role</Form.Label>
             <InputGroup>
-              <InputGroup.Text className="bg-white border-end-0">🔍</InputGroup.Text>
+              <InputGroup.Text className="bg-white border-end-0" aria-hidden="true">🔍</InputGroup.Text>
               <Form.Control
+                id="mentor-search"
+                aria-label="Search mentors by name, firm, or role"
                 className="border-start-0 bg-white"
                 placeholder="Search by name, firm, or role…"
                 value={search}
@@ -130,7 +133,7 @@ export default function BrowsePage() {
         </Row>
 
         {/* Track filter pills */}
-        <Stack direction="horizontal" gap={2} className="flex-wrap mb-4">
+        <Stack direction="horizontal" gap={2} className="flex-wrap mb-4" role="group" aria-label="Filter mentors by track">
           {tracks.map((t) => (
             <Button
               key={t}
@@ -139,6 +142,7 @@ export default function BrowsePage() {
               className="rounded-pill px-3"
               style={filterTrack === t ? { background: '#003E92', borderColor: '#003E92' } : {}}
               onClick={() => setFilterTrack(t)}
+              aria-pressed={filterTrack === t}
             >
               {t}
             </Button>
@@ -199,7 +203,7 @@ export default function BrowsePage() {
                   {/* Stats row */}
                   <Row className="g-0 text-center mb-3 border rounded-3 overflow-hidden">
                     <Col className="py-2 border-end">
-                      <div className="fw-bold small">⭐ {m.rating}</div>
+                      <div className="fw-bold small"><span aria-hidden="true">⭐</span> {m.rating}</div>
                       <div className="text-muted" style={{ fontSize: 11 }}>Rating</div>
                     </Col>
                     <Col className="py-2 border-end">
@@ -229,7 +233,7 @@ export default function BrowsePage() {
 
         {filtered.length === 0 && (
           <div className="text-center py-5 text-muted">
-            <div className="fs-1 mb-2">🔍</div>
+            <div className="fs-1 mb-2" aria-hidden="true">🔍</div>
             <p>No mentors match your search.</p>
             <Button
               variant="outline-secondary"

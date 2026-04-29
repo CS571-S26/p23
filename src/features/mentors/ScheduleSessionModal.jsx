@@ -69,6 +69,7 @@ export default function ScheduleSessionModal({ mentor, show, onHide, onBooked })
       scheduledAt: sessionTime,
       bookedAt: new Date().toISOString(),
       status: 'upcoming',
+      price: mentor.pricePerSession ?? 0,
     }
     try {
       saveSession(session)
@@ -190,7 +191,7 @@ export default function ScheduleSessionModal({ mentor, show, onHide, onBooked })
                   {mentor.track}
                 </span>
                 <span className="text-muted" style={{ fontSize: '0.82rem' }}>
-                  ⭐ {mentor.rating} · {mentor.totalSessions} sessions
+                  <span aria-hidden="true">⭐</span> {mentor.rating} · {mentor.totalSessions} sessions
                 </span>
                 <span className="ms-auto fw-bold" style={{ color: '#003E92', fontSize: '0.9rem' }}>
                   ${mentor.pricePerSession}<span className="text-muted fw-normal" style={{ fontSize: '0.78rem' }}> / session</span>
@@ -202,15 +203,16 @@ export default function ScheduleSessionModal({ mentor, show, onHide, onBooked })
           </Modal.Header>
 
           <Modal.Body className="px-4 pt-3 pb-2">
-            <h6 className="fw-semibold mb-3" style={{ color: '#0a0f1e' }}>
+            <h2 className="h6 fw-semibold mb-3" style={{ color: '#0a0f1e' }}>
               Book a Session
-            </h6>
+            </h2>
 
             <Form.Group className="mb-3">
-              <Form.Label className="fw-medium small text-muted text-uppercase" style={{ letterSpacing: '0.05em', fontSize: '0.72rem' }}>
+              <Form.Label htmlFor="modal-session-type" className="fw-medium small text-muted text-uppercase" style={{ letterSpacing: '0.05em', fontSize: '0.72rem' }}>
                 Session Type
               </Form.Label>
               <Form.Select
+                id="modal-session-type"
                 value={sessionType}
                 onChange={(e) => { setSessionType(e.target.value); setErrorMsg('') }}
                 className="rounded-3"
@@ -231,7 +233,7 @@ export default function ScheduleSessionModal({ mentor, show, onHide, onBooked })
                 className="p-3 rounded-3 mb-3 d-flex align-items-start gap-2"
                 style={{ background: '#f0f5ff', border: '1px solid #dce8ff' }}
               >
-                <span style={{ fontSize: '1.1rem' }}>
+                <span style={{ fontSize: '1.1rem' }} aria-hidden="true">
                   {sessionType === 'coaching' ? '🎯' : sessionType === 'mock_interview' ? '🎤' : '📄'}
                 </span>
                 <div>
@@ -248,10 +250,11 @@ export default function ScheduleSessionModal({ mentor, show, onHide, onBooked })
             )}
 
             <Form.Group className="mb-3">
-              <Form.Label className="fw-medium small text-muted text-uppercase" style={{ letterSpacing: '0.05em', fontSize: '0.72rem' }}>
+              <Form.Label htmlFor="modal-session-time" className="fw-medium small text-muted text-uppercase" style={{ letterSpacing: '0.05em', fontSize: '0.72rem' }}>
                 Date & Time
               </Form.Label>
               <Form.Control
+                id="modal-session-time"
                 type="datetime-local"
                 value={sessionTime}
                 min={minStr}

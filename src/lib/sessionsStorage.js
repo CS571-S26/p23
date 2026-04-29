@@ -14,6 +14,7 @@
 //   scheduledAt: string,  // ISO datetime string
 //   bookedAt: string,     // ISO datetime string (when the booking was made)
 //   status: 'upcoming' | 'cancelled',
+//   price: number,        // price at time of booking
 // }
 
 const STORAGE_KEY = 'ace_sessions'
@@ -63,4 +64,95 @@ export function getSessionsForStudent(username) {
   return readSessions().filter(
     (s) => s.studentUsername === username && s.status !== 'cancelled',
   )
+}
+
+/** Returns all non-cancelled sessions for a given mentor (by mentorId) */
+export function getSessionsForMentor(mentorId) {
+  return readSessions().filter(
+    (s) => s.mentorId === mentorId && s.status !== 'cancelled',
+  )
+}
+
+/** Returns ALL sessions for a mentor including cancelled (for history) */
+export function getAllSessionsForMentor(mentorId) {
+  return readSessions().filter((s) => s.mentorId === mentorId)
+}
+
+/** Seed demo sessions for a mentor so the dashboard isn't empty on first load */
+export function seedDemoSessionsIfEmpty(mentorId, mentorName, mentorFirm, mentorRole) {
+  const existing = getSessionsForMentor(mentorId)
+  if (existing.length > 0) return // already has sessions
+
+  const now = new Date()
+  const demo = [
+    {
+      id: crypto.randomUUID(),
+      studentUsername: 'alex_r',
+      mentorId,
+      mentorName,
+      mentorFirm,
+      mentorRole,
+      sessionType: 'mock_interview',
+      scheduledAt: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'upcoming',
+      price: 200,
+    },
+    {
+      id: crypto.randomUUID(),
+      studentUsername: 'jamie_l',
+      mentorId,
+      mentorName,
+      mentorFirm,
+      mentorRole,
+      sessionType: 'coaching',
+      scheduledAt: new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'upcoming',
+      price: 200,
+    },
+    {
+      id: crypto.randomUUID(),
+      studentUsername: 'taylor_m',
+      mentorId,
+      mentorName,
+      mentorFirm,
+      mentorRole,
+      sessionType: 'resume_review',
+      scheduledAt: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'upcoming',
+      price: 175,
+    },
+    {
+      id: crypto.randomUUID(),
+      studentUsername: 'sam_k',
+      mentorId,
+      mentorName,
+      mentorFirm,
+      mentorRole,
+      sessionType: 'mock_interview',
+      scheduledAt: new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedAt: new Date(now.getTime() - 17 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'upcoming',
+      price: 200,
+    },
+    {
+      id: crypto.randomUUID(),
+      studentUsername: 'casey_p',
+      mentorId,
+      mentorName,
+      mentorFirm,
+      mentorRole,
+      sessionType: 'coaching',
+      scheduledAt: new Date(now.getTime() - 21 * 24 * 60 * 60 * 1000).toISOString(),
+      bookedAt: new Date(now.getTime() - 24 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'upcoming',
+      price: 200,
+    },
+  ]
+
+  const all = readSessions()
+  all.push(...demo)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
 }

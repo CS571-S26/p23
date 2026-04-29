@@ -29,6 +29,16 @@ export default function AppShellNav() {
           <Nav className="ms-auto align-items-center gap-2">
             {user && (
               <>
+                {user.role === 'student' && (
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => navigate('/my-sessions')}
+                  >
+                    My Sessions
+                  </Button>
+                )}
+
                 <Nav.Item className="d-flex align-items-center me-2">
                   <span className="text-muted small me-1">{user.username}</span>
                   <Badge
@@ -38,6 +48,7 @@ export default function AppShellNav() {
                     {user.role}
                   </Badge>
                 </Nav.Item>
+
                 <Button
                   variant="outline-secondary"
                   size="sm"

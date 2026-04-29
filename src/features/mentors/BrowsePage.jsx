@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import AppShellNav from '../../components/layout/AppShellNav.jsx'
 import { mockMentors } from '../../lib/mockData.js'
+import ScheduleSessionModal from '../../features/mentors/ScheduleSessionModal.jsx'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -10,12 +11,21 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Stack from 'react-bootstrap/Stack'
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 
 const TRACK_VARIANTS = {
   'Investment Banking': 'warning',
   'Management Consulting': 'success',
   'Tech & FAANG': 'info',
   'Private Equity': 'danger',
+}
+
+const TRACK_ACCENT = {
+  'Investment Banking': '#ffc107',
+  'Management Consulting': '#198754',
+  'Tech & FAANG': '#0dcaf0',
+  'Private Equity': '#dc3545',
 }
 
 const SESSION_LABELS = {
@@ -35,6 +45,9 @@ export default function BrowsePage() {
   const [mentors, setMentors] = useState([])
   const [search, setSearch] = useState('')
   const [filterTrack, setFilterTrack] = useState('All')
+  const [selectedMentor, setSelectedMentor] = useState(null)
+  const [showModal, setShowModal] = useState(false)
+  const [toast, setToast] = useState({ show: false, mentorName: '', type: '' })
 
   useEffect(() => {
     setMentors(mockMentors)
@@ -51,16 +64,52 @@ export default function BrowsePage() {
     return matchSearch && matchTrack
   })
 
+  const handleBookClick = (mentor) => {
+    setSelectedMentor(mentor)
+    setShowModal(true)
+  }
+
+  const handleBooked = (session) => {
+    setToast({
+      show: true,
+      mentorName: session.mentorName,
+      type: session.sessionType,
+    })
+  }
+
+  const handleHide = () => {
+    setShowModal(false)
+    setSelectedMentor(null)
+  }
+
   return (
     <div className="min-vh-100 bg-light">
       <AppShellNav />
+
+      {/* Toast notification */}
+      <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1100 }}>
+        <Toast
+          show={toast.show}
+          onClose={() => setToast((t) => ({ ...t, show: false }))}
+          delay={4000}
+          autohide
+          bg="dark"
+        >
+          <Toast.Body className="text-white d-flex align-items-center gap-2">
+            <span>✅</span>
+            <span>
+              <strong>{SESSION_LABELS[toast.type] || toast.type}</strong> booked with {toast.mentorName}!
+            </span>
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
 
       <Container fluid="xl" className="py-5">
 
         {/* Header */}
         <Row className="mb-4 align-items-end">
           <Col xs={12} md={7}>
-            <h1 className="fw-bold mb-1" style={{ letterSpacing: '-0.5px' }}>
+            <h1 className="fw-bold mb-1" style={{ letterSpacing: '-0.5px', fontFamily: "'Cormorant Garamond', serif" }}>
               Browse Mentors
             </h1>
             <p className="text-muted mb-0">
@@ -88,6 +137,7 @@ export default function BrowsePage() {
               size="sm"
               variant={filterTrack === t ? 'dark' : 'outline-secondary'}
               className="rounded-pill px-3"
+              style={filterTrack === t ? { background: '#003E92', borderColor: '#003E92' } : {}}
               onClick={() => setFilterTrack(t)}
             >
               {t}
@@ -107,19 +157,7 @@ export default function BrowsePage() {
               <Card className="h-100 border-0 shadow-sm rounded-4 overflow-hidden">
 
                 {/* Card top accent */}
-                <div
-                  style={{
-                    height: 6,
-                    background:
-                      m.track === 'Investment Banking'
-                        ? '#ffc107'
-                        : m.track === 'Management Consulting'
-                        ? '#198754'
-                        : m.track === 'Tech & FAANG'
-                        ? '#0dcaf0'
-                        : '#dc3545',
-                  }}
-                />
+                <div style={{ height: 6, background: TRACK_ACCENT[m.track] || '#6c757d' }} />
 
                 <Card.Body className="p-4 d-flex flex-column">
 
@@ -127,12 +165,7 @@ export default function BrowsePage() {
                   <div className="d-flex align-items-center gap-3 mb-3">
                     <div
                       className="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
-                      style={{
-                        width: 48,
-                        height: 48,
-                        fontSize: 16,
-                        background: '#1a1a2e',
-                      }}
+                      style={{ width: 48, height: 48, fontSize: 16, background: '#003E92' }}
                     >
                       {getInitials(m.name)}
                     </div>
@@ -181,11 +214,11 @@ export default function BrowsePage() {
 
                   {/* CTA */}
                   <Button
-                    variant="dark"
-                    className="w-100 rounded-3"
-                    disabled
+                    className="w-100 rounded-3 fw-semibold"
+                    style={{ background: '#003E92', borderColor: '#003E92' }}
+                    onClick={() => handleBookClick(m)}
                   >
-                    Book Session — Coming Soon
+                    Book a Session
                   </Button>
 
                 </Card.Body>
@@ -198,13 +231,25 @@ export default function BrowsePage() {
           <div className="text-center py-5 text-muted">
             <div className="fs-1 mb-2">🔍</div>
             <p>No mentors match your search.</p>
-            <Button variant="outline-secondary" size="sm" onClick={() => { setSearch(''); setFilterTrack('All') }}>
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={() => { setSearch(''); setFilterTrack('All') }}
+            >
               Clear filters
             </Button>
           </div>
         )}
 
       </Container>
+
+      {/* Booking Modal */}
+      <ScheduleSessionModal
+        mentor={selectedMentor}
+        show={showModal}
+        onHide={handleHide}
+        onBooked={handleBooked}
+      />
     </div>
   )
 }

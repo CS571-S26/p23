@@ -107,9 +107,6 @@ export default function LoginPage() {
               <Card className="shadow-sm border-0 rounded-4 p-4">
                 <Card.Body>
                   <h1 className="fs-3 fw-semibold mb-1">{roleLabel} login</h1>
-                  <Alert variant="info" className="small py-2 mb-4">
-                    No real authentication yet — session is saved in your browser.
-                  </Alert>
 
                   <Form onSubmit={handleSubmit} noValidate>
                     <Form.Group className="mb-3" controlId="login-username">
@@ -137,9 +134,7 @@ export default function LoginPage() {
                         autoComplete="current-password"
                         className="rounded-3"
                       />
-                      <Form.Text className="text-muted">
-                        Not stored or validated.
-                      </Form.Text>
+                      
                     </Form.Group>
 
                     <Row className="g-2">

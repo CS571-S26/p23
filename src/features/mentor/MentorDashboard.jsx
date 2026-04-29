@@ -20,7 +20,6 @@ import {
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Nav from 'react-bootstrap/Nav'
 import Badge from 'react-bootstrap/Badge'
 import Stack from 'react-bootstrap/Stack'
 
@@ -155,12 +154,17 @@ export default function MentorDashboard() {
         <div
           className="rounded-3 mb-4 p-1 d-flex flex-wrap gap-1"
           style={{ background: '#eef0f7', display: 'inline-flex' }}
+          role="tablist"
+          aria-label="Mentor dashboard sections"
         >
           {TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className="border-0 rounded-3 d-flex align-items-center gap-2 fw-medium"
+              role="tab"
+              aria-selected={activeTab === tab.key}
+              aria-controls={`${tab.key}-panel`}
               style={{
                 padding: '8px 16px',
                 fontSize: '0.85rem',
@@ -172,7 +176,7 @@ export default function MentorDashboard() {
                 whiteSpace: 'nowrap',
               }}
             >
-              <span>{tab.icon}</span>
+              <span aria-hidden="true">{tab.icon}</span>
               <span>{tab.label}</span>
               {tab.key === 'sessions' && upcomingCount > 0 && (
                 <Badge
@@ -192,7 +196,7 @@ export default function MentorDashboard() {
         </div>
 
         {/* Tab content */}
-        <div>
+        <div id={`${activeTab}-panel`} role="tabpanel">
           {activeTab === 'overview' && (
             <OverviewTab
               sessions={sessions}

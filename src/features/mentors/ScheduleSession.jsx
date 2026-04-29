@@ -46,6 +46,7 @@ export default function ScheduleSession() {
       scheduledAt: sessionTime,
       bookedAt: new Date().toISOString(),
       status: 'upcoming',
+      price: mentor.pricePerSession ?? 0,
     };
 
     try {
@@ -63,13 +64,13 @@ export default function ScheduleSession() {
 
   return (
     <div className="schedule-page-backdrop">
-      <div className="schedule-box">
+      <div className="schedule-box" role="dialog" aria-modal="true" aria-labelledby="schedule-title">
 
         {/* ── SUCCESS SCREEN ───────────────── */}
         {phase === 'success' ? (
           <div className="schedule-success">
             <div className="schedule-success-icon" aria-hidden="true">✓</div>
-            <h2 className="schedule-title">You're booked!</h2>
+            <h1 id="schedule-title" className="schedule-title">You're booked!</h1>
             <p className="schedule-success-detail">
               <strong>{typeLabel}</strong> with <strong>{mentor.name}</strong>
             </p>
@@ -95,8 +96,8 @@ export default function ScheduleSession() {
 
         /* ── FORM ───────────────── */
         <>
-          <button className="schedule-close" onClick={() => navigate(-1)}>×</button>
-          <h2 className="schedule-title">Schedule with {mentor.name}</h2>
+          <button className="schedule-close" onClick={() => navigate(-1)} aria-label="Close schedule form">×</button>
+          <h1 id="schedule-title" className="schedule-title">Schedule with {mentor.name}</h1>
           <p className="schedule-mentor-sub">{mentor.role} · {mentor.firm}</p>
 
           <label className="schedule-label">
@@ -121,7 +122,7 @@ export default function ScheduleSession() {
               type="datetime-local"
               className="schedule-input"
               value={sessionTime}
-              min={new Date().toISOString().slice(0, 16)}
+              min={new Date(Date.now() + 30 * 60 * 1000).toISOString().slice(0, 16)}
               onChange={(e) => { setSessionTime(e.target.value); setErrorMsg(''); }}
             />
           </label>
@@ -135,7 +136,7 @@ export default function ScheduleSession() {
               disabled={!sessionType || !sessionTime}
               onClick={handleConfirm}
             >
-              Confirm
+              Confirm — ${mentor.pricePerSession ?? 0}
             </button>
           </div>
         </>

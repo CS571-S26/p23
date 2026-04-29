@@ -95,7 +95,7 @@ export default function ProfileTab({ mentorId, mentor, sessionTypes, onSaved }) 
       <Col xs={12} lg={7}>
         <Card className="border-0 shadow-sm rounded-4">
           <Card.Header className="bg-white border-0 pt-4 px-4 pb-2">
-            <h6 className="fw-semibold mb-0" style={{ color: '#0a0f1e' }}>Edit Profile</h6>
+            <h2 className="h6 fw-semibold mb-0" style={{ color: '#0a0f1e' }}>Edit Profile</h2>
             <p className="text-muted mb-0 mt-1" style={{ fontSize: '0.78rem' }}>
               Update your public mentor profile. Changes are saved to your account.
             </p>

@@ -74,7 +74,7 @@ function SessionCard({ session, onCancel }) {
             }}
           >
             <div className="text-center">
-              <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>{typeIcon}</div>
+              <div style={{ fontSize: '1.4rem', lineHeight: 1 }} aria-hidden="true">{typeIcon}</div>
             </div>
           </Col>
 
@@ -109,7 +109,7 @@ function SessionCard({ session, onCancel }) {
                     className="rounded-pill fw-normal"
                     style={{ background: '#e8f5e9', color: '#1b5e20', fontSize: '0.72rem' }}
                   >
-                    ● Upcoming
+                    <span aria-hidden="true">●</span> Upcoming
                   </Badge>
                 )}
               </div>
@@ -132,7 +132,7 @@ function SessionCard({ session, onCancel }) {
                 {typeLabel}
               </div>
               <div className="text-muted" style={{ fontSize: '0.8rem' }}>
-                📅 {day} at {time}
+                <span aria-hidden="true">📅</span> {day} at {time}
               </div>
             </Stack>
           </Col>
@@ -220,10 +220,10 @@ export default function StudentSessions() {
           /* ── Empty state ── */
           <Card className="border-0 shadow-sm rounded-4 text-center py-5">
             <Card.Body>
-              <div style={{ fontSize: '3.5rem', lineHeight: 1, marginBottom: 16 }}>📅</div>
-              <h4 className="fw-bold mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <div style={{ fontSize: '3.5rem', lineHeight: 1, marginBottom: 16 }} aria-hidden="true">📅</div>
+              <h2 className="h4 fw-bold mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 No sessions yet
-              </h4>
+              </h2>
               <p className="text-muted mb-4" style={{ maxWidth: 340, margin: '0 auto 24px' }}>
                 Browse our roster of mentors and book your first 1:1 session.
               </p>
@@ -241,12 +241,12 @@ export default function StudentSessions() {
             {/* ── Upcoming ── */}
             <section className="mb-5">
               <div className="d-flex align-items-center gap-2 mb-3">
-                <h5
-                  className="fw-semibold mb-0 text-uppercase"
+                <h2
+                  className="h5 fw-semibold mb-0 text-uppercase"
                   style={{ letterSpacing: '0.08em', fontSize: '0.78rem', color: '#7a80a0' }}
                 >
                   Upcoming
-                </h5>
+                </h2>
                 {upcoming.length > 0 && (
                   <Badge
                     className="rounded-pill"
@@ -282,12 +282,12 @@ export default function StudentSessions() {
             {past.length > 0 && (
               <section>
                 <div className="d-flex align-items-center gap-2 mb-3">
-                  <h5
-                    className="fw-semibold mb-0 text-uppercase"
+                  <h2
+                    className="h5 fw-semibold mb-0 text-uppercase"
                     style={{ letterSpacing: '0.08em', fontSize: '0.78rem', color: '#7a80a0' }}
                   >
                     Past Sessions
-                  </h5>
+                  </h2>
                   <Badge
                     className="rounded-pill"
                     style={{ background: '#f5f5f5', color: '#7a80a0', border: '1px solid #dde3f0', fontWeight: 600 }}

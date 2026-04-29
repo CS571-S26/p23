@@ -93,7 +93,7 @@ export default function OverviewTab({ sessions, mentor, onTabChange }) {
               Next Session
             </div>
             <div className="fw-semibold" style={{ fontSize: '1rem' }}>
-              {SESSION_TYPE_ICONS[nextSession.sessionType]} {SESSION_TYPE_LABELS[nextSession.sessionType] ?? nextSession.sessionType} with{' '}
+              <span aria-hidden="true">{SESSION_TYPE_ICONS[nextSession.sessionType]}</span> {SESSION_TYPE_LABELS[nextSession.sessionType] ?? nextSession.sessionType} with{' '}
               <strong>{nextSession.studentUsername}</strong>
             </div>
             <div style={{ fontSize: '0.82rem', opacity: 0.85 }}>{formatDate(nextSession.scheduledAt)}</div>
